@@ -1,0 +1,71 @@
+SAIGON RISING — CONCEPT PROMPTS
+AI tool: Claude (Anthropic), Claude Opus 5.5, in the Claude app
+Session date: 22 October 2026
+
+About this log: our own messages to Claude are quoted exactly. Where Claude wrote
+itself a working brief (a plan before building), it is summarised and marked
+[Claude's working brief]. Add any further prompts the team uses below the line at
+the end.
+
+--------------------------------------------------------------------------------
+PROMPT 1 — choosing the challenge
+--------------------------------------------------------------------------------
+"can we do challenge 3 4 and then go back to challenge 2?"
+
+Context given earlier in the session: the full Challenge 3 brief from the Kaggle
+competition page (a 2D, front-end-only HTML/CSS/JS game about a social issue in
+Vietnam or Australia, with Menu and Play screens and a fixed submission folder).
+
+--------------------------------------------------------------------------------
+PROMPT 2 — picking the issue and the game style
+--------------------------------------------------------------------------------
+Claude asked three multiple-choice questions. Our answers:
+
+  Q: Which social issue should the game be about?
+     Options offered: HCMC flooding / Plastic waste / Student mental health /
+     Traffic & air quality
+  A: "HCMC flooding (Recommended)"
+
+  Q: What style of game?
+     Options offered: Turn-based board/tile / Card game / Real-time arcade
+  A: "Turn-based board/tile (Recommended)"
+
+  Q: What team name should go in the repo and report?
+  A: "Use a placeholder" (later: "The team name is Quadcore")
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — game concept
+--------------------------------------------------------------------------------
+- Title: Saigon Rising. Player is the planner of a fictional riverside district,
+  Bến Nước, on the Saigon River.
+- 12 rounds, one per two-year rainy season, 2026 to 2050.
+- Each round: read a forecast (rain in mm, peak tide in m) -> spend a budget on
+  defences -> the season plays out (rain, tide, water flowing downhill) -> report.
+- The mechanics must each teach a real cause of flooding in HCMC:
+    * high tides stop drains from emptying (tide gate at the canal mouth fixes it)
+    * groundwater pumping makes the land sink every season (clean-water policy)
+    * concrete sheds rain; wetlands, parks and ponds absorb it
+    * dikes keep the river out but trap rain behind them
+    * mangroves buffer the riverbank
+- Temptation mechanic: "Sell to developer" pays now and floods later.
+- Lose if residents' happiness reaches 0; final grade A–F from the share of
+  residents kept dry.
+- Show a short, sourced real-world fact in every season report.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — visual direction
+--------------------------------------------------------------------------------
+- Draw the look from the subject itself: painted red-and-white flood-depth staffs,
+  blue Saigon street signs, tile roofs, rain on concrete.
+- Palette: rain-washed concrete grey, street-sign blue for actions, flood-staff
+  red only for danger, water blue, vegetation green.
+- Typeface: Be Vietnam Pro (designed for Vietnamese diacritics).
+- One memorable element: a live tide-gauge staff beside the map that the water
+  climbs each season, and a title whose letters are half under water.
+- Checked against generic AI-design defaults (cream + serif, dark + neon,
+  identical cards) and rejected them in favour of the subject-specific look.
+
+--------------------------------------------------------------------------------
+Team prompts added after this session:
+--------------------------------------------------------------------------------
+

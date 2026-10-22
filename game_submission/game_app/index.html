@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saigon Rising</title>
+  <meta name="description" content="A turn-based planning game about keeping a riverside district of Hồ Chí Minh City dry from 2026 to 2050.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%231D4B97'/%3E%3Cpath d='M0 11q4-3 8 0t8 0v5H0z' fill='%2364B5E8'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- ============ MENU ============ -->
+<section id="screen-menu" class="screen active" aria-labelledby="title">
+  <div class="menu-wrap">
+    <div class="title-block">
+      <h1 id="title" class="title"><span class="title-text">Saigon<br>Rising</span><span class="title-water" aria-hidden="true">Saigon<br>Rising</span></h1>
+      <p class="tagline">Keep a riverside district of Hồ Chí Minh City dry from 2026 to 2050 — through king tides, monsoon storms and a city that is slowly sinking.</p>
+    </div>
+    <div class="menu-actions">
+      <button class="btn btn-primary" id="btn-start">Start planning</button>
+      <button class="btn" id="btn-howto">How to play</button>
+      <button class="btn btn-quiet" id="btn-sound-menu" aria-pressed="true">Sound on</button>
+    </div>
+    <div class="menu-sign" aria-hidden="true">
+      <span class="sign-small">Quận</span><span class="sign-big">Bến Nước</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW TO PLAY ============ -->
+<section id="screen-howto" class="screen" aria-labelledby="howto-title">
+  <div class="howto-wrap">
+    <h2 id="howto-title">How to play</h2>
+    <p class="lede">You are the planner for Bến Nước, an imaginary district on the bank of the Saigon River. Every two years the rainy season arrives. Your job is to keep people's homes out of the water.</p>
+    <ol class="steps">
+      <li><strong>Read the forecast.</strong> It shows how much rain is coming and how high the tide will climb up the gauge.</li>
+      <li><strong>Build.</strong> Pick a tool from the tray, then click a block on the map. Hover over any block to see how high it sits above the river.</li>
+      <li><strong>Start the season.</strong> Rain falls, the tide pushes in, and water runs downhill. Blocks under more than 15 cm of water are flooded.</li>
+      <li><strong>Read the report.</strong> Flooded homes cost repairs and make residents unhappy. If happiness hits zero, you are replaced.</li>
+    </ol>
+    <h3>Things to know</h3>
+    <ul class="tips">
+      <li>Drains can only empty when the tide is low. A <b>tide gate</b> at the canal mouth fixes that.</li>
+      <li>The ground sinks every season while people pump groundwater — until you pay for <b>clean piped water</b>.</li>
+      <li>Concrete sheds rain. Wetlands, parks and ponds soak it up. Selling land to developers pays now and floods later.</li>
+      <li>Dikes keep the river out, but they also keep rainwater in.</li>
+    </ul>
+    <div id="howto-tools" class="legend"></div>
+    <div class="howto-actions">
+      <button class="btn btn-primary" id="btn-howto-start">Start planning</button>
+      <button class="btn" id="btn-howto-back">Back to menu</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLAY ============ -->
+<section id="screen-play" class="screen" aria-label="Game">
+  <header class="topbar">
+    <div class="district"><span class="sign-small">Quận</span> Bến Nước</div>
+    <div class="stats" role="status" aria-live="polite">
+      <div class="stat"><span class="stat-label">Year</span><span class="stat-val" id="s-year">2026</span></div>
+      <div class="stat"><span class="stat-label">Budget</span><span class="stat-val" id="s-budget">₫160B</span></div>
+      <div class="stat"><span class="stat-label">Happiness</span><span class="stat-val"><span class="meter"><span id="s-happy-bar"></span></span><span id="s-happy">70</span></span></div>
+      <div class="stat"><span class="stat-label">Residents</span><span class="stat-val" id="s-people">27,000</span></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="btn-heights" aria-pressed="false" title="Show block heights">Heights</button>
+      <button class="icon-btn" id="btn-sound" aria-pressed="true" title="Sound">Sound</button>
+      <button class="icon-btn" id="btn-menu" title="Back to menu">Menu</button>
+    </div>
+  </header>
+
+  <main class="play-main">
+    <div class="board-wrap">
+      <div id="board" class="board" role="grid" aria-label="District map"></div>
+      <canvas id="rain" class="rain" aria-hidden="true"></canvas>
+      <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+      <div id="toast" class="toast" role="alert" hidden></div>
+    </div>
+
+    <aside class="side">
+      <div class="gauge-box">
+        <div class="gauge" aria-label="Tide gauge">
+          <div class="gauge-staff" id="gauge-staff"></div>
+          <div class="gauge-water" id="gauge-water"></div>
+          <div class="gauge-forecast" id="gauge-forecast"><span></span></div>
+        </div>
+        <div class="forecast">
+          <h2 class="panel-title">Forecast for <span id="f-year">2026</span></h2>
+          <div class="f-row"><span>Rain</span><b id="f-rain">80 mm</b></div>
+          <div class="f-row"><span>Peak tide</span><b id="f-tide">1.10 m</b></div>
+          <p class="f-note" id="f-note"></p>
+          <p class="f-small">Forecasts can be off by about 8%.</p>
+        </div>
+      </div>
+
+      <div class="policy">
+        <h2 class="panel-title">District policy</h2>
+        <button class="btn btn-small policy-btn" id="btn-policy"></button>
+        <p class="f-small" id="policy-desc"></p>
+      </div>
+
+      <div class="selected" id="tool-info">
+        <h2 class="panel-title" id="tool-name">Inspect</h2>
+        <p id="tool-desc"></p>
+      </div>
+
+      <div class="side-actions">
+        <button class="btn" id="btn-undo" disabled>Undo</button>
+        <button class="btn btn-primary btn-season" id="btn-season">Start the 2026 season</button>
+      </div>
+    </aside>
+  </main>
+
+  <nav class="tray" id="tray" aria-label="Building tools"></nav>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="screen-results" class="screen" aria-labelledby="res-title">
+  <div class="results-wrap">
+    <div class="res-head">
+      <div class="grade" id="res-grade">A</div>
+      <div>
+        <h2 id="res-title">2050: the plan is finished</h2>
+        <p id="res-summary" class="lede"></p>
+      </div>
+    </div>
+    <div class="res-grid">
+      <div class="res-chart">
+        <h3>Share of residents flooded each season</h3>
+        <div id="res-chart"></div>
+      </div>
+      <dl class="res-stats" id="res-stats"></dl>
+    </div>
+    <div class="res-lessons">
+      <h3>What your district learned</h3>
+      <ul id="res-lessons"></ul>
+    </div>
+    <div class="howto-actions">
+      <button class="btn btn-primary" id="btn-again">Plan again</button>
+      <button class="btn" id="btn-res-menu">Back to menu</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEASON REPORT ============ -->
+<dialog id="report" class="report" aria-labelledby="rep-title">
+  <h2 id="rep-title"></h2>
+  <p class="rep-sub" id="rep-sub"></p>
+  <div class="rep-rows" id="rep-rows"></div>
+  <div class="fact"><p id="rep-fact"></p></div>
+  <button class="btn btn-primary" id="btn-continue">Plan the next season</button>
+</dialog>
+
+<script src="js/data.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/art.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

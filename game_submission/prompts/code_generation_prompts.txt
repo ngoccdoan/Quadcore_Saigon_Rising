@@ -1,0 +1,64 @@
+SAIGON RISING — CODE GENERATION PROMPTS
+AI tool: Claude (Anthropic), Claude Opus 5.5
+Session date: 22 October 2026
+
+About this log: our messages are quoted exactly; Claude's working briefs are
+summarised and marked as such. Add any further prompts the team uses below the
+line at the end.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — architecture
+--------------------------------------------------------------------------------
+- Plain <script> files, not ES modules, so index.html works when opened directly
+  from disk (file://) with no server.
+- Separate the rules from the interface:
+    data.js  — map, tile definitions, tools, costs, facts
+    sim.js   — game state, building rules, flood simulation, scoring; no DOM code,
+               and exportable to Node so it can be tested headlessly
+    art.js   — SVG drawing
+    audio.js — sound
+    main.js  — screens, rendering, input, the season animation
+- One HTML page holding four screens (Menu, How to play, Play, Results) plus a
+  <dialog> for the season report.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — flood simulation (sim.js)
+--------------------------------------------------------------------------------
+For each season:
+1. Tide: flood-fill from the river. A land block floods if its height (plus
+   dike or mangrove protection) is below the tide. The tide also travels up the
+   canal unless the canal mouth has a tide gate.
+2. Rain: add rain depth x runoff factor x 3 (streets concentrate runoff).
+   Runoff: apartments 0.95, homes 0.85, empty lot 0.6, park 0.25, wetland 0.15.
+3. Flow: 14 passes in which water moves from each block to lower neighbouring
+   water surfaces. Riverbank blocks without a dike drain to the river when the
+   water is above the tide; the canal mouth drains down to the tide level (or to
+   zero if gated and pumped). A retention pond's floor sits 0.9 m lower, so it
+   collects water.
+4. Drains: remove 0.28 m from their block and 0.12 m from neighbours, scaled by
+   how well the outlets can empty (100% at low tide or with a gate, 50% or 20%
+   at higher tides).
+5. Damage: a block with more than 15 cm of water is flooded; flooded homes cost
+   repairs and lower happiness; dry blocks pay full tax.
+After the season the land sinks 4 cm unless the clean-water policy is in place.
+Forecasts are seeded and shown in advance; the actual season varies by about 8%.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — interface (main.js, style.css)
+--------------------------------------------------------------------------------
+- Board: CSS grid of buttons, one per block, each with SVG art, a water layer
+  whose opacity follows the flood depth, a red dashed outline for blocks that
+  flooded last season, and an optional height label.
+- Hover or keyboard focus shows a tooltip: name in English and Vietnamese,
+  height above the river, residents, defences, last season's flooding, and
+  whether the selected tool can be built there (with the reason if not).
+- Season sequence: rain canvas and sound -> tide gauge rises -> water layers fade
+  in -> report dialog with flooded share, tax, repairs, happiness, causes, fact.
+- Undo stack for builds within the current season.
+- Keyboard: 1–9 tools, H heights, Z undo. Visible focus outlines. Respect
+  prefers-reduced-motion. Responsive down to phone width.
+
+--------------------------------------------------------------------------------
+Team prompts added after this session:
+--------------------------------------------------------------------------------
+

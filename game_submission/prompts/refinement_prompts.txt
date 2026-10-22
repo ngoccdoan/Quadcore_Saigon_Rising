@@ -1,0 +1,70 @@
+SAIGON RISING — REFINEMENT PROMPTS (testing, balancing, polishing)
+AI tool: Claude (Anthropic), Claude Opus 5.5
+Session date: 22 October 2026
+
+About this log: Claude tested the game itself with automated playthroughs and
+screenshots, then fixed what it found. Its working briefs are summarised and
+marked as such. Add any further prompts the team uses below the line at the end.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — balance testing
+--------------------------------------------------------------------------------
+"Simulate hundreds of games in Node with different strategies to make sure doing
+nothing loses and smart planning wins."
+
+Strategies: do nothing / sell everything to developers / drains only / a sensible
+plan (tide gate first, then clean water, drains on the lowest homes, ponds,
+raise flooded homes, mangroves). 300 seeded games each.
+
+Round 1 result: doing nothing failed every game, but the first season flooded
+11 of 27 home blocks before a new player could react.
+Refinement: lower the opening tide (1.10 m -> 1.00 m base) and let it climb
+faster over time (+2.5 cm -> +3.5 cm per round).
+
+Round 2 result: the sensible plan earned mostly A grades — too easy once money
+piled up.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — economy
+--------------------------------------------------------------------------------
+Playtest screenshots showed ₫534B unspent by 2032 and ₫770B at the end, so
+spending choices stopped mattering.
+Refinement 1: cut taxes (homes 7 -> 4, apartments 13 -> 8, market 16 -> 10).
+  Result: too tight — the sensible plan was voted out in 137 of 300 games.
+Refinement 2: middle ground (homes 5, apartments 10, market 12).
+  Result: careless strategies always fail; the sensible plan mostly earns B
+  (some A and C) and finishes with about ₫46B left.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — visual fixes from screenshots
+--------------------------------------------------------------------------------
+- The title's "water" was a flat blue box over the letters. Fixed by layering a
+  second copy of the title filled with a water gradient and clipping it, so the
+  letters themselves look half submerged; then extended the clip box so the
+  descender of the "g" is covered too.
+- The forecast label on the tide gauge overlapped the scale numbers; moved it
+  below the dashed line.
+- The "pick a tool" hint stayed visible during the season; hide it when the
+  season starts.
+- Shallow floodwater was too faint to read; raised the water layer's minimum
+  opacity.
+- Yellow "you can build here" outlines showed during the season; hide them while
+  the season plays.
+- On phones the tool tray wrapped into three rows and covered half the screen;
+  made it a single row that scrolls sideways.
+
+--------------------------------------------------------------------------------
+[Claude's working brief] — fact checking
+--------------------------------------------------------------------------------
+"Look up sources for the flooding facts shown in the game."
+Changes after checking sources (see project_report.pdf):
+- "a metre or two above sea level" -> "nearly half of the city sits less than
+  one metre above sea level"
+- "subsiding by centimetres a year" -> "about 2–5 cm a year on average — more
+  than twice as fast as the sea is rising"
+- Added that high-tide floodwater can reach knee height in some streets.
+
+--------------------------------------------------------------------------------
+Team prompts added after this session:
+--------------------------------------------------------------------------------
+
